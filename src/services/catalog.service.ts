@@ -16,6 +16,9 @@ export class CatalogService {
   async updateProduct(input: any) {
     const data = await this._repository.update(input);
     //emit event to update record in elastic search
+    if (!data.id) {
+      throw new Error("unable to update product");
+    }
     return data;
   }
   //instead of this we will coll from Elastic search
@@ -27,6 +30,9 @@ export class CatalogService {
   // instead of this we will get product from Elastic search
   async getProduct(id: number) {
     const product = await this._repository.findOne(id);
+    if (product == null) {
+      throw new Error("unable to get product");
+    }
     return product;
   }
   async deleteProduct(id: number) {
